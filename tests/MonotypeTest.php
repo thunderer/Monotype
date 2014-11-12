@@ -2,16 +2,8 @@
 namespace Thunder\Monotype\Tests;
 
 use Thunder\Monotype\Monotype;
-
-class ExampleStdClass extends \stdClass { /* --- */ }
-
-class TraversableClass implements \ArrayAccess
-    {
-    public function offsetExists($offset) {}
-    public function offsetGet($offset) {}
-    public function offsetSet($offset, $value) {}
-    public function offsetUnset($offset) {}
-    }
+use Thunder\Monotype\Tests\Dummy\ArrayAccessClass;
+use Thunder\Monotype\Tests\Dummy\SubClass;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
@@ -49,9 +41,9 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
             array(true, 'isFloatLikeArray', array(array('0.0'))),
             array(false, 'isFloatLikeArray', array(array('0'))),
 
-            array(true, 'isInstanceOf', array(new \stdClass(), \stdClass::class)),
-            array(true, 'isInstanceOf', array(new ExampleStdClass(), \stdClass::class)),
-            array(false, 'isDirectInstanceOf', array(new ExampleStdClass(), \stdClass::class)),
+            array(true, 'isInstanceOf', array(new \stdClass(), 'stdClass')),
+            array(true, 'isInstanceOf', array(new SubClass(), 'stdClass')),
+            array(false, 'isDirectInstanceOf', array(new SubClass(), 'stdClass')),
 
             array(true, 'isCallable', array(array($mt, 'isInteger'))),
             array(true, 'isCallable', array('strlen')),
@@ -86,8 +78,8 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
             array(true, 'isArray', array(array())),
             array(false, 'isArray', array('x')),
 
-            array(true, 'isLikeArray', array(new TraversableClass())),
-            array(false, 'isLikeArray', array(new ExampleStdClass())),
+            array(true, 'isLikeArray', array(new ArrayAccessClass())),
+            array(false, 'isLikeArray', array(new SubClass())),
 
             array(true, 'isNull', array(null)),
             array(false, 'isNull', array(true)),
