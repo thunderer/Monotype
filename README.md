@@ -1,5 +1,14 @@
 # Monotype
 
+[![Build Status](https://travis-ci.org/thunderer/Monotype.png?branch=master)](https://travis-ci.org/thunderer/Monotype)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/1cd1abab-c172-4da1-a465-c26794f42eee/mini.png)](https://insight.sensiolabs.com/projects/1cd1abab-c172-4da1-a465-c26794f42eee)
+[![License](https://poser.pugx.org/thunderer/monotype/license.svg)](https://packagist.org/packages/thunderer/monotype)
+[![Latest Stable Version](https://poser.pugx.org/thunderer/monotype/v/stable.svg)](https://packagist.org/packages/thunderer/monotype)
+[![Dependency Status](https://www.versioneye.com/user/projects/5463ca0ea345411321000098/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5463ca0ea345411321000098)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/thunderer/Monotype/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/thunderer/Monotype/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/thunderer/Monotype/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/thunderer/Monotype/?branch=master)
+[![Code Climate](https://codeclimate.com/github/thunderer/Monotype/badges/gpa.svg)](https://codeclimate.com/github/thunderer/Monotype)
+
 Monotype is a small utility library to check if given variable matches specific type requirements. PHP is known for its issues with [variable type comparison mechanics](http://php.net/manual/en/types.comparisons.php) so why don't reduce the pain of developers with some useful code?
 
 ## Requirements
