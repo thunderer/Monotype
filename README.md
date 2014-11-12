@@ -13,7 +13,9 @@ Monotype is a small utility library to check if given variable matches specific 
 
 ## Requirements
 
-PHP 5.3 (for namespaces), nothing fancy.
+No required dependencies, only PHP >=5.4
+
+> PHP 5.3 will work too most of the time. It does not support using `$this` in closures (which are used in array checking methods), so since it has [already reached its EOL](http://php.net/supported-versions.php) I'm not fixing these errors. It is possible, but you need to make manual fixes yourself where applicable.
 
 ## Installation
 
