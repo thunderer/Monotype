@@ -43,12 +43,15 @@ After creating `Thunder\Monotype\Monotype` instance just use the class API, it's
 
 ```php
 $mt = new Thunder\Monotype\Monotype();
-
 if($mt->isInteger(12) && $mt->isIntegerLikeArray(array('12', 24)))
     {
     echo "yep, it works!";
     }
-if($mt->isString(null))
+    
+// OR:
+    
+$mtValue = new Thunder\Monotype\MonotypeValue(array(12, '24'))
+if($mtValue->isIntegerArray())
     {
     echo "how about... no?";
     }

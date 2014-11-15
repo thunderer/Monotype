@@ -2,6 +2,7 @@
 namespace Thunder\Monotype\Tests;
 
 use Thunder\Monotype\Monotype;
+use Thunder\Monotype\MonotypeValue;
 use Thunder\Monotype\Tests\Dummy\ArrayAccessClass;
 use Thunder\Monotype\Tests\Dummy\SubClass;
 
@@ -13,11 +14,10 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideTests
      */
-    public function testIs($expected, $method, array $value)
+    public function testIs($expected, $method, array $data)
         {
-        $mt = new Monotype();
-
-        $this->assertEquals($expected, call_user_func_array(array($mt, $method), $value));
+        $this->assertEquals($expected, call_user_func_array(array(new Monotype(), $method), $data));
+        $this->assertEquals($expected, call_user_func_array(array(new MonotypeValue($data[0]), $method), array_slice($data, 1)));
         }
 
     public function provideTests()
@@ -28,12 +28,14 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
             array(true, 'isInteger', array(0)),
             array(false, 'isInteger', array('0')),
 
+            array(true, 'isLikeInteger', array('0')),
+            array(false, 'isLikeInteger', array('x')),
+
             array(true, 'isIntegerArray', array(array(0))),
             array(false, 'isIntegerArray', array(array('0'))),
 
             array(true, 'isIntegerLikeArray', array(array('0'))),
             array(false, 'isIntegerLikeArray', array(array('x'))),
-
 
             array(true, 'isFloatArray', array(array(0.0))),
             array(false, 'isFloatArray', array(array('0'))),
@@ -83,6 +85,9 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
 
             array(true, 'isNull', array(null)),
             array(false, 'isNull', array(true)),
+
+            array(true, 'isObject', array(new \stdClass())),
+            array(false, 'isObject', array('x')),
             );
         }
     }
