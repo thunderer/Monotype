@@ -2,6 +2,7 @@
 namespace Thunder\Monotype\Tests;
 
 use Thunder\Monotype\Monotype;
+use Thunder\Monotype\MonotypeChain;
 use Thunder\Monotype\MonotypeValue;
 use Thunder\Monotype\Tests\Dummy\ArrayAccessClass;
 use Thunder\Monotype\Tests\Dummy\SubClass;
@@ -94,6 +95,28 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
             array(false, 'isInstanceOfArray', array(array(new ArrayAccessClass()), 'stdClass')),
             array(true, 'isDirectInstanceOfArray', array(array(new \stdClass()), 'stdClass')),
             array(false, 'isDirectInstanceOfArray', array(array(new SubClass()), 'stdClass')),
-        );
+            );
+        }
+
+    public function testChain()
+        {
+        $chain = new MonotypeChain();
+        $chain
+            ->createBuilder()
+            ->isInteger()
+            ->isLikeInteger();
+
+        $this->assertTrue($chain->validate(12));
+        $this->assertFalse($chain->validate('12'));
+        }
+
+    public function testChainException()
+        {
+        $this->setExpectedException('BadMethodCallException');
+        $chain = new MonotypeChain();
+        $chain
+            ->createBuilder()
+            ->isArrayZ()
+            ->validate('x');
         }
     }
