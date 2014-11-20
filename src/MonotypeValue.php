@@ -32,6 +32,16 @@ class MonotypeValue
         return $this->monotype->isFloatLikeArray($this->value);
         }
 
+    public function isInstanceOfArray($class)
+        {
+        return $this->isArray() && $this->monotype->isInstanceOfArray($this->value, $class);
+        }
+
+    public function isDirectInstanceOfArray($class)
+        {
+        return $this->isArray() && $this->monotype->isDirectInstanceOfArray($this->value, $class);
+        }
+
     public function isLikeInteger()
         {
         return $this->monotype->isLikeInteger($this->value);

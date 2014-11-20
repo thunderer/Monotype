@@ -8,31 +8,45 @@ final class Monotype
     {
     /* --- TYPED ARRAYS ---------------------------------------------------- */
 
-    public function isIntegerArray(array $array)
+    public function isIntegerArray($array)
         {
-        return array_reduce($array, function($state, $value) {
+        return $this->isArray($array) && array_reduce($array, function($state, $value) {
             return !$state ?: $this->isInteger($value);
             }, true);
         }
 
-    public function isIntegerLikeArray(array $array)
+    public function isIntegerLikeArray($array)
         {
-        return array_reduce($array, function($state, $value) {
+        return $this->isArray($array) && array_reduce($array, function($state, $value) {
             return !$state ?: $this->isLikeInteger($value);
             }, true);
         }
 
-    public function isFloatArray(array $array)
+    public function isFloatArray($array)
         {
-        return array_reduce($array, function($state, $value) {
+        return $this->isArray($array) && array_reduce($array, function($state, $value) {
             return !$state ?: $this->isFloat($value);
             }, true);
         }
 
-    public function isFloatLikeArray(array $array)
+    public function isFloatLikeArray($array)
         {
-        return array_reduce($array, function($state, $value) {
+        return $this->isArray($array) && array_reduce($array, function($state, $value) {
             return !$state ?: $this->isLikeFloat($value);
+            }, true);
+        }
+
+    public function isInstanceOfArray($array, $class)
+        {
+        return $this->isArray($array) && array_reduce($array, function($state, $value) use($class) {
+            return !$state ?: $this->isInstanceOf($value, $class);
+            }, true);
+        }
+
+    public function isDirectInstanceOfArray($array, $class)
+        {
+        return $this->isArray($array) && array_reduce($array, function($state, $value) use($class) {
+            return !$state ?: $this->isDirectInstanceOf($value, $class);
             }, true);
         }
 

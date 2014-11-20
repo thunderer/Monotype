@@ -88,6 +88,12 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
 
             array(true, 'isObject', array(new \stdClass())),
             array(false, 'isObject', array('x')),
-            );
+
+            array(true, 'isInstanceOfArray', array(array(new \stdClass()), 'stdClass')),
+            array(true, 'isInstanceOfArray', array(array(new SubClass()), 'stdClass')),
+            array(false, 'isInstanceOfArray', array(array(new ArrayAccessClass()), 'stdClass')),
+            array(true, 'isDirectInstanceOfArray', array(array(new \stdClass()), 'stdClass')),
+            array(false, 'isDirectInstanceOfArray', array(array(new SubClass()), 'stdClass')),
+        );
         }
     }
