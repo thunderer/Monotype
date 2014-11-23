@@ -2,8 +2,23 @@
 namespace Thunder\Monotype\Tests;
 
 use Thunder\Monotype\Monotype;
-use Thunder\Monotype\MonotypeChain;
-use Thunder\Monotype\MonotypeValue;
+use Thunder\Monotype\Test\ArrayOfTest;
+use Thunder\Monotype\Test\ArrayTest;
+use Thunder\Monotype\Test\ArrayValueTest;
+use Thunder\Monotype\Test\BooleanTest;
+use Thunder\Monotype\Test\BooleanValueTest;
+use Thunder\Monotype\Test\CallableTest;
+use Thunder\Monotype\Test\ClassTest;
+use Thunder\Monotype\Test\ClassValueTest;
+use Thunder\Monotype\Test\FloatTest;
+use Thunder\Monotype\Test\FloatValueTest;
+use Thunder\Monotype\Test\IntegerTest;
+use Thunder\Monotype\Test\IntegerValueTest;
+use Thunder\Monotype\Test\NullTest;
+use Thunder\Monotype\Test\ObjectTest;
+use Thunder\Monotype\Test\ScalarTest;
+use Thunder\Monotype\Test\StringTest;
+use Thunder\Monotype\Test\StringValueTest;
 use Thunder\Monotype\Tests\Dummy\ArrayAccessClass;
 use Thunder\Monotype\Tests\Dummy\SubClass;
 
@@ -13,110 +28,150 @@ use Thunder\Monotype\Tests\Dummy\SubClass;
 final class MonotypeTest extends \PHPUnit_Framework_TestCase
     {
     /**
-     * @dataProvider provideTests
+     * @dataProvider provideSingleValues
      */
-    public function testIs($expected, $method, array $data)
+    public function testSingleValues($expected, $method, $data)
         {
-        $this->assertEquals($expected, call_user_func_array(array(new Monotype(), $method), $data));
-        $this->assertEquals($expected, call_user_func_array(array(new MonotypeValue($data[0]), $method), array_slice($data, 1)));
+        $monotype = new Monotype(array(
+            new IntegerTest(),
+            new IntegerValueTest(),
+            new FloatTest(),
+            new FloatValueTest(),
+            new StringTest(),
+            new StringValueTest(),
+            new ArrayTest(),
+            new ArrayValueTest(),
+            new BooleanTest(),
+            new BooleanValueTest(),
+            new CallableTest(),
+            new ScalarTest(),
+            new ObjectTest(),
+            new NullTest(),
+            new ArrayOfTest(new IntegerTest(), 'integer_array'),
+            new ArrayOfTest(new IntegerValueTest(), 'integer_value_array'),
+            new ArrayOfTest(new FloatTest(), 'float_array'),
+            new ArrayOfTest(new FloatValueTest(), 'float_value_array'),
+            ));
+
+        $this->assertEquals($expected, $monotype->isValid($data, array($method)));
         }
 
-    public function provideTests()
+    public function provideSingleValues()
         {
-        $mt = new Monotype();
-
         return array(
-            array(true, 'isInteger', array(0)),
-            array(false, 'isInteger', array('0')),
+            array(true, 'integer', 0),
+            array(false, 'integer', '0'),
 
-            array(true, 'isLikeInteger', array('0')),
-            array(false, 'isLikeInteger', array('x')),
+            array(true, 'integer_value', '0'),
+            array(false, 'integer_value', 'x'),
 
-            array(true, 'isIntegerArray', array(array(0))),
-            array(false, 'isIntegerArray', array(array('0'))),
+            array(true, 'callable', array(new ArrayAccessClass(), 'offsetGet')),
+            array(true, 'callable', 'strlen'),
+            array(false, 'callable', array()),
+            array(false, 'callable', 'invalid'),
 
-            array(true, 'isIntegerLikeArray', array(array('0'))),
-            array(false, 'isIntegerLikeArray', array(array('x'))),
+            array(true, 'float', 0.0),
+            array(false, 'float', '0'),
 
-            array(true, 'isFloatArray', array(array(0.0))),
-            array(false, 'isFloatArray', array(array('0'))),
+            array(true, 'float_value', 0.0),
+            array(true, 'float_value', '0.0'),
+            array(false, 'float_value', '0'),
+            array(false, 'float_value', 'x'),
 
-            array(true, 'isFloatLikeArray', array(array('0.0'))),
-            array(false, 'isFloatLikeArray', array(array('0'))),
+            array(true, 'boolean', false),
+            array(true, 'boolean', true),
+            array(false, 'boolean', 0),
+            array(false, 'boolean', 1),
 
-            array(true, 'isInstanceOf', array(new \stdClass(), 'stdClass')),
-            array(true, 'isInstanceOf', array(new SubClass(), 'stdClass')),
-            array(false, 'isDirectInstanceOf', array(new SubClass(), 'stdClass')),
+            array(true, 'boolean_value', 0),
+            array(true, 'boolean_value', 1),
 
-            array(true, 'isCallable', array(array($mt, 'isInteger'))),
-            array(true, 'isCallable', array('strlen')),
-            array(false, 'isCallable', array(array())),
-            array(false, 'isCallable', array('invalid')),
+            array(true, 'string', 'x'),
+            array(false, 'string', 0),
 
-            array(true, 'isFloat', array(0.0)),
-            array(false, 'isFloat', array('0')),
+            array(true, 'string_value', 0),
+            array(false, 'string_value', new \stdClass()),
 
-            array(true, 'isLikeFloat', array(0.0)),
-            array(true, 'isLikeFloat', array('0.0')),
-            array(false, 'isLikeFloat', array('0')),
-            array(false, 'isLikeFloat', array('x')),
+            array(true, 'scalar', ''),
+            array(false, 'scalar', array()),
 
-            array(true, 'isBoolean', array(false)),
-            array(true, 'isBoolean', array(true)),
-            array(false, 'isBoolean', array(0)),
-            array(false, 'isBoolean', array(1)),
+            array(true, 'null', null),
+            array(false, 'null', true),
 
-            array(true, 'isString', array('x')),
-            array(false, 'isString', array(0)),
+            array(true, 'object', new \stdClass()),
+            array(false, 'object', 'x'),
 
-            array(true, 'isLikeString', array(0)),
-            array(false, 'isLikeString', array(new \stdClass())),
+            array(true, 'array', array()),
+            array(false, 'array', 'x'),
 
-            array(true, 'isTrue', array(true)),
-            array(true, 'isFalse', array(false)),
+            array(true, 'array_value', new ArrayAccessClass()),
+            array(false, 'array_value', new SubClass()),
 
-            array(true, 'isScalar', array('')),
-            array(false, 'isScalar', array(array())),
+            array(true, 'integer_array', array(0)),
+            array(false, 'integer_array', array('0')),
 
-            array(true, 'isArray', array(array())),
-            array(false, 'isArray', array('x')),
+            array(true, 'integer_value_array', array('0')),
+            array(false, 'integer_value_array', array('x')),
 
-            array(true, 'isLikeArray', array(new ArrayAccessClass())),
-            array(false, 'isLikeArray', array(new SubClass())),
+            array(true, 'float_array', array(0.0)),
+            array(false, 'float_array', array('0')),
 
-            array(true, 'isNull', array(null)),
-            array(false, 'isNull', array(true)),
-
-            array(true, 'isObject', array(new \stdClass())),
-            array(false, 'isObject', array('x')),
-
-            array(true, 'isInstanceOfArray', array(array(new \stdClass()), 'stdClass')),
-            array(true, 'isInstanceOfArray', array(array(new SubClass()), 'stdClass')),
-            array(false, 'isInstanceOfArray', array(array(new ArrayAccessClass()), 'stdClass')),
-            array(true, 'isDirectInstanceOfArray', array(array(new \stdClass()), 'stdClass')),
-            array(false, 'isDirectInstanceOfArray', array(array(new SubClass()), 'stdClass')),
+            array(true, 'float_value_array', array('0.0')),
+            array(false, 'float_value_array', array('0')),
             );
         }
 
-    public function testChain()
+    /**
+     * @dataProvider provideClassTests
+     */
+    public function testClasses($expected, $method, $data, $class)
         {
-        $chain = new MonotypeChain();
-        $chain
-            ->createBuilder()
-            ->isInteger()
-            ->isLikeInteger();
+        $monotype = new Monotype(array(
+            new ClassTest($class),
+            new ClassValueTest($class),
+            new ArrayOfTest(new ClassTest('stdClass'), 'class_array'),
+            new ArrayOfTest(new ClassValueTest('stdClass'), 'class_value_array'),
+            ));
 
-        $this->assertTrue($chain->validate(12));
-        $this->assertFalse($chain->validate('12'));
+        $this->assertEquals($expected, $monotype->isValid($data, array($method)));
         }
 
-    public function testChainException()
+    public function provideClassTests()
         {
-        $this->setExpectedException('BadMethodCallException');
-        $chain = new MonotypeChain();
-        $chain
-            ->createBuilder()
-            ->isArrayZ()
-            ->validate('x');
+        return array(
+            array(true, 'class_value', new \stdClass(), 'stdClass'),
+            array(true, 'class_value', new SubClass(), 'stdClass'),
+            array(false, 'class', new SubClass(), 'stdClass'),
+
+            array(true, 'class_value_array', array(new \stdClass()), 'stdClass'),
+            array(true, 'class_value_array', array(new SubClass()), 'stdClass'),
+            array(false, 'class_value_array', array(new ArrayAccessClass()), 'stdClass'),
+            array(true, 'class_array', array(new \stdClass()), 'stdClass'),
+            array(false, 'class_array', array(new SubClass()), 'stdClass'),
+            );
+        }
+
+    public function testMonotypeNoTestsException()
+        {
+        $this->setExpectedException('InvalidArgumentException');
+        new Monotype(array());
+        }
+
+    public function testMonotypeNonExistentTestException()
+        {
+        $this->setExpectedException('RuntimeException');
+        $monotype = new Monotype(array(
+            new IntegerTest(),
+            ));
+        $monotype->isValid(12, array('integer_value'));
+        }
+
+    public function testMonotypeDuplicateTestAliasException()
+        {
+        $this->setExpectedException('RuntimeException');
+        new Monotype(array(
+            new IntegerTest(),
+            new IntegerTest(),
+            ));
         }
     }

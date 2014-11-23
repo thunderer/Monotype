@@ -6,138 +6,71 @@ namespace Thunder\Monotype;
  */
 final class Monotype
     {
-    /* --- TYPED ARRAYS ---------------------------------------------------- */
+    /** @var TestInterface[] */
+    private $tests = array();
 
-    public function isIntegerArray($array)
+    /**
+     * @param TestInterface[] $tests
+     */
+    public function __construct(array $tests)
         {
-        return $this->isArray($array) && array_reduce($array, function($state, $value) {
-            return !$state ?: $this->isInteger($value);
-            }, true);
+        if(empty($tests))
+            {
+            $msg = 'I am really sorry, but you did not provide any tests...';
+            throw new \InvalidArgumentException($msg);
+            }
+
+        array_map(function(TestInterface $test) {
+            $this->addTest($test);
+            }, $tests);
         }
 
-    public function isIntegerLikeArray($array)
+    /**
+     * Validates given variable against already registered tests referenced by
+     * array of their aliases.
+     *
+     * @param mixed $value
+     * @param string[] $tests
+     *
+     * @return bool
+     */
+    public function isValid($value, array $tests)
         {
-        return $this->isArray($array) && array_reduce($array, function($state, $value) {
-            return !$state ?: $this->isLikeInteger($value);
-            }, true);
+        foreach($tests as $alias)
+            {
+            if(!$this->getTest($alias)->isValid($value))
+                {
+                return false;
+                }
+            }
+
+        return true;
         }
 
-    public function isFloatArray($array)
+    private function addTest(TestInterface $test)
         {
-        return $this->isArray($array) && array_reduce($array, function($state, $value) {
-            return !$state ?: $this->isFloat($value);
-            }, true);
+        if($this->hasTest($test->getAlias()))
+            {
+            $msg = 'Duplicate test alias %s!';
+            throw new \RuntimeException(sprintf($msg, $test->getAlias()));
+            }
+
+        $this->tests[$test->getAlias()] = $test;
         }
 
-    public function isFloatLikeArray($array)
+    private function getTest($alias)
         {
-        return $this->isArray($array) && array_reduce($array, function($state, $value) {
-            return !$state ?: $this->isLikeFloat($value);
-            }, true);
+        if(!$this->hasTest($alias))
+            {
+            $msg = 'Non existent test alias %s!';
+            throw new \RuntimeException(sprintf($msg, $alias));
+            }
+
+        return $this->tests[$alias];
         }
 
-    public function isInstanceOfArray($array, $class)
+    private function hasTest($alias)
         {
-        return $this->isArray($array) && array_reduce($array, function($state, $value) use($class) {
-            return !$state ?: $this->isInstanceOf($value, $class);
-            }, true);
-        }
-
-    public function isDirectInstanceOfArray($array, $class)
-        {
-        return $this->isArray($array) && array_reduce($array, function($state, $value) use($class) {
-            return !$state ?: $this->isDirectInstanceOf($value, $class);
-            }, true);
-        }
-
-    /* --- CASTABLE TYPES -------------------------------------------------- */
-
-    public function isLikeInteger($value)
-        {
-        return ctype_digit((string)$value);
-        }
-
-    public function isLikeFloat($value)
-        {
-        return $this->isFloat($value) || (is_numeric((string)$value) && preg_match('/^[0-9]+\\.[0-9]+$/', (string)$value));
-        }
-
-    public function isLikeString($value)
-        {
-        return $this->isObject($value)
-            ? method_exists($value, '__toString')
-            : $this->isString((string)$value);
-        }
-
-    public function isTrue($value)
-        {
-        return true === (bool)$value;
-        }
-
-    public function isFalse($value)
-        {
-        return false === (bool)$value;
-        }
-
-    public function isLikeArray($value)
-        {
-        return is_array($value) || ($this->isObject($value) && $value instanceof \ArrayAccess);
-        }
-
-    /* --- PRIMITIVE TYPES ------------------------------------------------- */
-
-    public function isInteger($value)
-        {
-        return is_int($value);
-        }
-
-    public function isBoolean($value)
-        {
-        return is_bool($value);
-        }
-
-    public function isString($value)
-        {
-        return is_string($value);
-        }
-
-    public function isFloat($value)
-        {
-        return is_float($value) || is_double($value);
-        }
-
-    public function isInstanceOf($object, $class)
-        {
-        return $object instanceof $class;
-        }
-
-    public function isDirectInstanceOf($object, $class)
-        {
-        return get_class($object) === $class;
-        }
-
-    public function isCallable($value)
-        {
-        return is_callable($value);
-        }
-
-    public function isObject($value)
-        {
-        return is_object($value);
-        }
-
-    public function isScalar($value)
-        {
-        return is_scalar($value);
-        }
-
-    public function isArray($value)
-        {
-        return is_array($value);
-        }
-
-    public function isNull($value)
-        {
-        return is_null($value);
+        return array_key_exists($alias, $this->tests);
         }
     }
