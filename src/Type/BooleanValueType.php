@@ -1,20 +1,20 @@
 <?php
-namespace Thunder\Monotype\Test;
+namespace Thunder\Monotype\Type;
 
 use Thunder\Monotype\TestInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class CallableTest implements TestInterface
+final class BooleanValueType implements TestInterface
     {
     public function isValid($value)
         {
-        return is_callable($value);
+        return (bool)$value === true || (bool)$value === false;
         }
 
     public function getAlias()
         {
-        return 'callable';
+        return 'boolean_value';
         }
     }

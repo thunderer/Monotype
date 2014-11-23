@@ -1,20 +1,20 @@
 <?php
-namespace Thunder\Monotype\Test;
+namespace Thunder\Monotype\Type;
 
 use Thunder\Monotype\TestInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class ObjectTest implements TestInterface
+final class NullType implements TestInterface
     {
     public function isValid($value)
         {
-        return is_object($value);
+        return is_null($value);
         }
 
     public function getAlias()
         {
-        return 'object';
+        return 'null';
         }
     }

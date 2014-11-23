@@ -1,20 +1,20 @@
 <?php
-namespace Thunder\Monotype\Test;
+namespace Thunder\Monotype\Type;
 
 use Thunder\Monotype\TestInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class BooleanValueTest implements TestInterface
+final class ArrayType implements TestInterface
     {
     public function isValid($value)
         {
-        return (bool)$value == true || (bool)$value == false;
+        return is_array($value);
         }
 
     public function getAlias()
         {
-        return 'boolean_value';
+        return 'array';
         }
     }

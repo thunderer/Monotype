@@ -1,16 +1,16 @@
 <?php
-namespace Thunder\Monotype\Test;
+namespace Thunder\Monotype\Type;
 
 use Thunder\Monotype\TestInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class IntegerValueTest implements TestInterface
+final class IntegerValueType implements TestInterface
     {
     public function isValid($value)
         {
-        $stringValueTest = new StringValueTest();
+        $stringValueTest = new StringValueType();
 
         return $stringValueTest->isValid($value)
             ? ctype_digit((string)$value)

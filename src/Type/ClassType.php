@@ -1,12 +1,12 @@
 <?php
-namespace Thunder\Monotype\Test;
+namespace Thunder\Monotype\Type;
 
 use Thunder\Monotype\TestInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class ClassTest implements TestInterface
+final class ClassType implements TestInterface
     {
     private $class;
 

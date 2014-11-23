@@ -2,23 +2,23 @@
 namespace Thunder\Monotype\Tests;
 
 use Thunder\Monotype\Monotype;
-use Thunder\Monotype\Test\ArrayOfTest;
-use Thunder\Monotype\Test\ArrayTest;
-use Thunder\Monotype\Test\ArrayValueTest;
-use Thunder\Monotype\Test\BooleanTest;
-use Thunder\Monotype\Test\BooleanValueTest;
-use Thunder\Monotype\Test\CallableTest;
-use Thunder\Monotype\Test\ClassTest;
-use Thunder\Monotype\Test\ClassValueTest;
-use Thunder\Monotype\Test\FloatTest;
-use Thunder\Monotype\Test\FloatValueTest;
-use Thunder\Monotype\Test\IntegerTest;
-use Thunder\Monotype\Test\IntegerValueTest;
-use Thunder\Monotype\Test\NullTest;
-use Thunder\Monotype\Test\ObjectTest;
-use Thunder\Monotype\Test\ScalarTest;
-use Thunder\Monotype\Test\StringTest;
-use Thunder\Monotype\Test\StringValueTest;
+use Thunder\Monotype\Type\ArrayOfType;
+use Thunder\Monotype\Type\ArrayType;
+use Thunder\Monotype\Type\ArrayValueType;
+use Thunder\Monotype\Type\BooleanType;
+use Thunder\Monotype\Type\BooleanValueType;
+use Thunder\Monotype\Type\CallableType;
+use Thunder\Monotype\Type\ClassType;
+use Thunder\Monotype\Type\ClassValueType;
+use Thunder\Monotype\Type\FloatType;
+use Thunder\Monotype\Type\FloatValueType;
+use Thunder\Monotype\Type\IntegerType;
+use Thunder\Monotype\Type\IntegerValueType;
+use Thunder\Monotype\Type\NullType;
+use Thunder\Monotype\Type\ObjectType;
+use Thunder\Monotype\Type\ScalarType;
+use Thunder\Monotype\Type\StringType;
+use Thunder\Monotype\Type\StringValueType;
 use Thunder\Monotype\Tests\Dummy\ArrayAccessClass;
 use Thunder\Monotype\Tests\Dummy\SubClass;
 
@@ -33,24 +33,24 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
     public function testSingleValues($expected, $method, $data)
         {
         $monotype = new Monotype(array(
-            new IntegerTest(),
-            new IntegerValueTest(),
-            new FloatTest(),
-            new FloatValueTest(),
-            new StringTest(),
-            new StringValueTest(),
-            new ArrayTest(),
-            new ArrayValueTest(),
-            new BooleanTest(),
-            new BooleanValueTest(),
-            new CallableTest(),
-            new ScalarTest(),
-            new ObjectTest(),
-            new NullTest(),
-            new ArrayOfTest(new IntegerTest(), 'integer_array'),
-            new ArrayOfTest(new IntegerValueTest(), 'integer_value_array'),
-            new ArrayOfTest(new FloatTest(), 'float_array'),
-            new ArrayOfTest(new FloatValueTest(), 'float_value_array'),
+            new IntegerType(),
+            new IntegerValueType(),
+            new FloatType(),
+            new FloatValueType(),
+            new StringType(),
+            new StringValueType(),
+            new ArrayType(),
+            new ArrayValueType(),
+            new BooleanType(),
+            new BooleanValueType(),
+            new CallableType(),
+            new ScalarType(),
+            new ObjectType(),
+            new NullType(),
+            new ArrayOfType(new IntegerType(), 'integer_array'),
+            new ArrayOfType(new IntegerValueType(), 'integer_value_array'),
+            new ArrayOfType(new FloatType(), 'float_array'),
+            new ArrayOfType(new FloatValueType(), 'float_value_array'),
             ));
 
         $this->assertEquals($expected, $monotype->isValid($data, array($method)));
@@ -127,10 +127,10 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
     public function testClasses($expected, $method, $data, $class)
         {
         $monotype = new Monotype(array(
-            new ClassTest($class),
-            new ClassValueTest($class),
-            new ArrayOfTest(new ClassTest('stdClass'), 'class_array'),
-            new ArrayOfTest(new ClassValueTest('stdClass'), 'class_value_array'),
+            new ClassType($class),
+            new ClassValueType($class),
+            new ArrayOfType(new ClassType('stdClass'), 'class_array'),
+            new ArrayOfType(new ClassValueType('stdClass'), 'class_value_array'),
             ));
 
         $this->assertEquals($expected, $monotype->isValid($data, array($method)));
@@ -139,15 +139,17 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
     public function provideClassTests()
         {
         return array(
+            array(false, 'class', new SubClass(), 'stdClass'),
+
             array(true, 'class_value', new \stdClass(), 'stdClass'),
             array(true, 'class_value', new SubClass(), 'stdClass'),
-            array(false, 'class', new SubClass(), 'stdClass'),
+
+            array(true, 'class_array', array(new \stdClass()), 'stdClass'),
+            array(false, 'class_array', array(new SubClass()), 'stdClass'),
 
             array(true, 'class_value_array', array(new \stdClass()), 'stdClass'),
             array(true, 'class_value_array', array(new SubClass()), 'stdClass'),
             array(false, 'class_value_array', array(new ArrayAccessClass()), 'stdClass'),
-            array(true, 'class_array', array(new \stdClass()), 'stdClass'),
-            array(false, 'class_array', array(new SubClass()), 'stdClass'),
             );
         }
 
@@ -161,7 +163,7 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
         {
         $this->setExpectedException('RuntimeException');
         $monotype = new Monotype(array(
-            new IntegerTest(),
+            new IntegerType(),
             ));
         $monotype->isValid(12, array('integer_value'));
         }
@@ -170,8 +172,8 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
         {
         $this->setExpectedException('RuntimeException');
         new Monotype(array(
-            new IntegerTest(),
-            new IntegerTest(),
+            new IntegerType(),
+            new IntegerType(),
             ));
         }
     }

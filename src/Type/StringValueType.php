@@ -1,17 +1,17 @@
 <?php
-namespace Thunder\Monotype\Test;
+namespace Thunder\Monotype\Type;
 
 use Thunder\Monotype\TestInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class StringValueTest implements TestInterface
+final class StringValueType implements TestInterface
     {
     public function isValid($value)
         {
-        $objectTest = new ObjectTest();
-        $stringTest = new StringTest();
+        $objectTest = new ObjectType();
+        $stringTest = new StringType();
 
         return $objectTest->isValid($value)
             ? method_exists($value, '__toString')

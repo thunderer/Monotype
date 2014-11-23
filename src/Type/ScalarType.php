@@ -1,20 +1,20 @@
 <?php
-namespace Thunder\Monotype\Test;
+namespace Thunder\Monotype\Type;
 
 use Thunder\Monotype\TestInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class IntegerTest implements TestInterface
+final class ScalarType implements TestInterface
     {
     public function isValid($value)
         {
-        return is_int($value);
+        return is_scalar($value);
         }
 
     public function getAlias()
         {
-        return 'integer';
+        return 'scalar';
         }
     }

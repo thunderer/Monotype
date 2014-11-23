@@ -1,12 +1,12 @@
 <?php
-namespace Thunder\Monotype\Test;
+namespace Thunder\Monotype\Type;
 
 use Thunder\Monotype\TestInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class ArrayOfTest implements TestInterface
+final class ArrayOfType implements TestInterface
     {
     private $test;
     private $alias;
@@ -19,7 +19,7 @@ final class ArrayOfTest implements TestInterface
 
     public function isValid($value)
         {
-        $arrayTest = new ArrayTest();
+        $arrayTest = new ArrayType();
 
         return $arrayTest->isValid($value) && array_reduce($value, function($state, $value) {
             return !$state ?: $this->test->isValid($value);
