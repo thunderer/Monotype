@@ -20,6 +20,6 @@ final class StringValueType implements TestInterface
 
     public function getAlias()
         {
-        return 'string_value';
+        return '@string';
         }
     }

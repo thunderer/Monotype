@@ -9,12 +9,10 @@ use Thunder\Monotype\TestInterface;
 final class ArrayOfType implements TestInterface
     {
     private $test;
-    private $alias;
 
-    public function __construct(TestInterface $test, $alias)
+    public function __construct(TestInterface $test)
         {
         $this->test = $test;
-        $this->alias = $alias;
         }
 
     public function isValid($value)
@@ -28,6 +26,6 @@ final class ArrayOfType implements TestInterface
 
     public function getAlias()
         {
-        return $this->alias;
+        return $this->test->getAlias().'[]';
         }
     }

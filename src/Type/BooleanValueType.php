@@ -15,6 +15,6 @@ final class BooleanValueType implements TestInterface
 
     public function getAlias()
         {
-        return 'boolean_value';
+        return '@boolean';
         }
     }

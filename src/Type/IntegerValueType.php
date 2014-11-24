@@ -19,6 +19,6 @@ final class IntegerValueType implements TestInterface
 
     public function getAlias()
         {
-        return 'integer_value';
+        return '@integer';
         }
     }

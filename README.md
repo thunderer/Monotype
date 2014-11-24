@@ -35,35 +35,75 @@ in your terminal or manually update your `composer.json` with
 (...)
 ```
 
-and run `composer install` or `composer update` afterwards.
+and run `composer install` or `composer update` afterwards. If you're not using Composer, then... (really, please just use it).
 
 ## Usage
 
-After creating `Thunder\Monotype\Monotype` instance just use the class API, it's easy to understand because all methods names are self-documenting and have literally no side-effects. See the listing below:
+Create instance by passing strategy and register array of types:
 
 ```php
-$mt = new Thunder\Monotype\Monotype();
-if($mt->isInteger(12) && $mt->isIntegerLikeArray(array('12', 24)))
-    {
-    echo "yep, it works!";
-    }
-    
-// OR:
-    
-$mtValue = new Thunder\Monotype\MonotypeValue(array(12, '24'))
-if($mtValue->isIntegerArray())
-    {
-    echo "how about... no?";
-    }
+use Thunder\Monotype\Strategy\AllStrategy;
+use Thunder\Monotype\Type\IntegerType;
+use Thunder\Monotype\Type\IntegerValueType;
+use Thunder\Monotype\Type\StringType;
+use Thunder\Monotype\Type\StringValueType;
+
+$monotype = new new Thunder\Monotype\Monotype(new AllStrategy(), array(
+    // ...
+    new IntegerType(),
+    new IntegerValueType(),
+    new StringType(),
+    new StringValueType(),
+    // ...
+    ));
 ```
 
-## Internals
+No further steps required, please just use it:
 
-This library consists of only one class and its API is divided into three parts:
+```php
+$monotype->isValid(12, array('integer')); // true
+$monotype->isValid(12, array('string')); // false
+$monotype->isValid('12', array('integer')); // false
+$monotype->isValid('12', array('@integer')); // true
+$monotype->isValid('x', array('string')); // true
+$monotype->isValid(null, array('string')); // false
+```
 
-- strict checks for primitive types using native functions,
-- loose checks taking into consideration the implicit type conversion such as numeric strings or classes with `__toString()`,
-- complex checks for complex types such as strict or loose typed arrays.
+## Reference
+
+There are several types and strategies built right into the codebase of this library:
+
+* Strategies:
+
+  * **All**: requires all specified tests to pass,
+  * **Single**: requires only one test to pass and returns true immediately,
+  * **AtLeast**: requires as many tests to pass as configured in contructor.
+  
+* Types (strict):
+ 
+  * **integer**: checks `is_int()`,
+  * **float**: checks `is_float()` and `is_double()`,
+  * **string**: checks `is_string()`,
+  * **array**: checks `is_array()`,
+  * **boolean**: checks `is_bool()`,
+  * **class**: compares `get_class()` result,
+  * **callable**: checks `is_callable()`,
+  * **object**: checks `is_object()`,
+  * **null**: checks `is_null()`,
+  * **scalar**: checks `is_scalar()`,
+  
+* Types (loose)
+  
+  * **@integer**: runs `ctype_digit()` on variable casted to string, 
+  * **@float**: matches regexp over variable casted to string,
+  * **@string**: casts to string or search for `__toString()` method in objects,
+  * **@array**: casts to array, checks `ArrayAccess` or converts from iterator,
+  * **@boolean**: casts to bool.
+  * **@class**: uses `instanceof` operator,
+  
+* Special Types:
+
+  * class **ArrayOfType**: requires instance of other type in constructor, its alias is inherited and postfixed with `[]`, checks for array of values matching given type.
 
 ## License
 

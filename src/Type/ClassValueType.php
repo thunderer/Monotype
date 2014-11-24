@@ -22,6 +22,6 @@ final class ClassValueType implements TestInterface
 
     public function getAlias()
         {
-        return 'class_value';
+        return '@class';
         }
     }

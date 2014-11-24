@@ -17,6 +17,6 @@ final class ArrayValueType implements TestInterface
 
     public function getAlias()
         {
-        return 'array_value';
+        return '@array';
         }
     }

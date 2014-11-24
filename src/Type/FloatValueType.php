@@ -17,6 +17,6 @@ final class FloatValueType implements TestInterface
 
     public function getAlias()
         {
-        return 'float_value';
+        return '@float';
         }
     }

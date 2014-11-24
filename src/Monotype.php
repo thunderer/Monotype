@@ -6,13 +6,17 @@ namespace Thunder\Monotype;
  */
 final class Monotype
     {
+    /** @var StrategyInterface */
+    private $strategy;
+
     /** @var TestInterface[] */
-    private $tests = array();
+    private $types = array();
 
     /**
+     * @param StrategyInterface $strategy
      * @param TestInterface[] $tests
      */
-    public function __construct(array $tests)
+    public function __construct(StrategyInterface $strategy, array $tests)
         {
         if(empty($tests))
             {
@@ -20,8 +24,10 @@ final class Monotype
             throw new \InvalidArgumentException($msg);
             }
 
+        $this->strategy = $strategy;
+
         array_map(function(TestInterface $test) {
-            $this->addTest($test);
+            $this->addType($test);
             }, $tests);
         }
 
@@ -36,41 +42,17 @@ final class Monotype
      */
     public function isValid($value, array $tests)
         {
-        foreach($tests as $alias)
-            {
-            if(!$this->getTest($alias)->isValid($value))
-                {
-                return false;
-                }
-            }
-
-        return true;
+        return $this->strategy->isValid($this->types, $value, $tests);
         }
 
-    private function addTest(TestInterface $test)
+    private function addType(TestInterface $test)
         {
-        if($this->hasTest($test->getAlias()))
+        if(array_key_exists($test->getAlias(), $this->types))
             {
             $msg = 'Duplicate test alias %s!';
             throw new \RuntimeException(sprintf($msg, $test->getAlias()));
             }
 
-        $this->tests[$test->getAlias()] = $test;
-        }
-
-    private function getTest($alias)
-        {
-        if(!$this->hasTest($alias))
-            {
-            $msg = 'Non existent test alias %s!';
-            throw new \RuntimeException(sprintf($msg, $alias));
-            }
-
-        return $this->tests[$alias];
-        }
-
-    private function hasTest($alias)
-        {
-        return array_key_exists($alias, $this->tests);
+        $this->types[$test->getAlias()] = $test;
         }
     }
