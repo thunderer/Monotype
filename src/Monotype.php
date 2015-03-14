@@ -9,12 +9,12 @@ final class Monotype
     /** @var StrategyInterface */
     private $strategy;
 
-    /** @var TestInterface[] */
+    /** @var TypeInterface[] */
     private $types = array();
 
     /**
      * @param StrategyInterface $strategy
-     * @param TestInterface[] $tests
+     * @param TypeInterface[] $tests
      */
     public function __construct(StrategyInterface $strategy, array $tests)
         {
@@ -26,7 +26,7 @@ final class Monotype
 
         $this->strategy = $strategy;
 
-        array_map(function(TestInterface $test) {
+        array_map(function(TypeInterface $test) {
             $this->addType($test);
             }, $tests);
         }
@@ -45,7 +45,7 @@ final class Monotype
         return $this->strategy->isValid($this->types, $value, $tests);
         }
 
-    private function addType(TestInterface $test)
+    private function addType(TypeInterface $test)
         {
         if(array_key_exists($test->getAlias(), $this->types))
             {

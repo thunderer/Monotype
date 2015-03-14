@@ -4,7 +4,7 @@ namespace Thunder\Monotype;
 interface StrategyInterface
     {
     /**
-     * @param TestInterface[] $types
+     * @param TypeInterface[] $types
      * @param mixed $value
      * @param string[] $tests
      *

@@ -1,16 +1,16 @@
 <?php
 namespace Thunder\Monotype\Type;
 
-use Thunder\Monotype\TestInterface;
+use Thunder\Monotype\TypeInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class ArrayOfType implements TestInterface
+final class ArrayOfType implements TypeInterface
     {
     private $test;
 
-    public function __construct(TestInterface $test)
+    public function __construct(TypeInterface $test)
         {
         $this->test = $test;
         }
@@ -18,9 +18,10 @@ final class ArrayOfType implements TestInterface
     public function isValid($value)
         {
         $arrayTest = new ArrayType();
+        $type = $this->test;
 
-        return $arrayTest->isValid($value) && array_reduce($value, function($state, $value) {
-            return !$state ?: $this->test->isValid($value);
+        return $arrayTest->isValid($value) && array_reduce($value, function($state, $value) use($type) {
+            return !$state ?: $type->isValid($value);
             }, true);
         }
 

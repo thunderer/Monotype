@@ -1,12 +1,12 @@
 <?php
 namespace Thunder\Monotype\Type;
 
-use Thunder\Monotype\TestInterface;
+use Thunder\Monotype\TypeInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class NullType implements TestInterface
+final class NullType implements TypeInterface
     {
     public function isValid($value)
         {

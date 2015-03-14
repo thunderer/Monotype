@@ -1,12 +1,12 @@
 <?php
 namespace Thunder\Monotype\Type;
 
-use Thunder\Monotype\TestInterface;
+use Thunder\Monotype\TypeInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
  */
-final class FloatType implements TestInterface
+final class FloatType implements TypeInterface
     {
     public function isValid($value)
         {
