@@ -14,22 +14,22 @@ final class Monotype
 
     /**
      * @param StrategyInterface $strategy
-     * @param TypeInterface[] $tests
+     * @param TypeInterface[] $types
      */
-    public function __construct(StrategyInterface $strategy, array $tests)
+    public function __construct(StrategyInterface $strategy, array $types)
         {
-        if(empty($tests))
+        if(empty($types))
             {
             $msg = 'I am really sorry, but you did not provide any tests...';
             throw new \InvalidArgumentException($msg);
             }
 
         $this->strategy = $strategy;
-        $that = $this;
 
-        array_map(function(TypeInterface $test) use($that) {
-            $that->addType($test);
-            }, $tests);
+        foreach($types as $test)
+            {
+            $this->addType($test);
+            }
         }
 
     /**
