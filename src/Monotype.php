@@ -25,9 +25,10 @@ final class Monotype
             }
 
         $this->strategy = $strategy;
+        $that = $this;
 
-        array_map(function(TypeInterface $test) {
-            $this->addType($test);
+        array_map(function(TypeInterface $test) use($that) {
+            $that->addType($test);
             }, $tests);
         }
 
