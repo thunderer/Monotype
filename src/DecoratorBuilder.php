@@ -15,8 +15,13 @@ final class DecoratorBuilder
     private $methodSignature = array();
     private $monotype = null;
 
-    public function __construct()
+    private function __construct()
         {
+        }
+
+    public static function create()
+        {
+        return new self();
         }
 
     public function getDecorator($object)

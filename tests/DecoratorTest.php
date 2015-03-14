@@ -16,7 +16,7 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
         {
         $statuses = array();
         $monotype = new Monotype(new AllStrategy(), array(new StringType()));
-        $builder = (new DecoratorBuilder())
+        $builder = DecoratorBuilder::create()
             ->beforeMethodCall('setVar', function() use(&$statuses) { $statuses[] = 'BMC'; })
             ->afterMethodCall('getVar', function() use(&$statuses) { $statuses[] = 'AMC'; })
             ->beforePropertySet('foo', function() use(&$statuses) { $statuses[] = 'BPS'; })
@@ -49,7 +49,7 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
         $statuses = 0;
         $monotype = new Monotype(new AllStrategy(), array(new StringType()));
         $callback = function() use(&$statuses) { $statuses++; };
-        $builder = (new DecoratorBuilder())
+        $builder = DecoratorBuilder::create()
             ->markProperty('foo', 'string', $monotype,  $callback);
 
         /** @var $obj Fixture */
@@ -64,7 +64,7 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function testMethodWithVoidSignatureHasArgumentsException()
         {
-        $obj = (new DecoratorBuilder())
+        $obj = DecoratorBuilder::create()
             ->methodSignature('getFoo', 'void', array('string'))
             ->getDecorator(new Fixture('x'));
         $this->setExpectedException('RuntimeException');
@@ -74,7 +74,7 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function testMethodWithSignatureInvalidArgumentsCountException()
         {
-        $obj = (new DecoratorBuilder())
+        $obj = DecoratorBuilder::create()
             ->methodSignature('setFoo', array('string'), 'void')
             ->getDecorator(new Fixture('x'));
         $this->setExpectedException('RuntimeException');
@@ -84,7 +84,7 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function testMethodWithSignatureMissingMonotypeException()
         {
-        $obj = (new DecoratorBuilder())
+        $obj = DecoratorBuilder::create()
             ->methodSignature('setFoo', array('string'), 'void')
             ->getDecorator(new Fixture('x'));
         $this->setExpectedException('RuntimeException');
@@ -95,7 +95,7 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
     public function testMethodWithSignatureArgumentTypeMismatchException()
         {
         $monotype = new Monotype(new AllStrategy(), array(new StringType()));
-        $obj = (new DecoratorBuilder())
+        $obj = DecoratorBuilder::create()
             ->methodSignature('setFoo', array(array('string')), 'void', $monotype)
             ->getDecorator(new Fixture('x'));
         $this->setExpectedException('RuntimeException');
@@ -105,7 +105,7 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function testMethodWithoutSignatureReturn()
         {
-        $obj = (new DecoratorBuilder())
+        $obj = DecoratorBuilder::create()
             ->getDecorator(new Fixture('x'));
         /** @var $obj Fixture */
         $obj->getFoo();
@@ -113,7 +113,7 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function testMethodDoesNotExistsException()
         {
-        $obj = (new DecoratorBuilder())
+        $obj = DecoratorBuilder::create()
             ->getDecorator(new Fixture('x'));
         $this->setExpectedException('RuntimeException');
         $obj->invalidMethod();
@@ -121,7 +121,7 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function testPropertyDoesNotExistsException()
         {
-        $obj = (new DecoratorBuilder())
+        $obj = DecoratorBuilder::create()
             ->getDecorator(new Fixture('x'));
         $this->setExpectedException('RuntimeException');
         $obj->invalidProperty;
