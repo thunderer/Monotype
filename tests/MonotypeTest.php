@@ -18,6 +18,7 @@ use Thunder\Monotype\Type\FloatType;
 use Thunder\Monotype\Type\FloatValueType;
 use Thunder\Monotype\Type\IntegerType;
 use Thunder\Monotype\Type\IntegerValueType;
+use Thunder\Monotype\Type\InterfaceType;
 use Thunder\Monotype\Type\NullType;
 use Thunder\Monotype\Type\ObjectType;
 use Thunder\Monotype\Type\ScalarType;
@@ -135,6 +136,7 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
             new ClassValueType($class),
             new ArrayOfType(new ClassType('stdClass')),
             new ArrayOfType(new ClassValueType('stdClass')),
+            new InterfaceType('ArrayAccess'),
             ));
 
         $this->assertEquals($expected, $monotype->isValid($data, array($method)));
@@ -154,6 +156,9 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
             array(true, '@class[]', array(new \stdClass()), 'stdClass'),
             array(true, '@class[]', array(new SubClass()), 'stdClass'),
             array(false, '@class[]', array(new ArrayAccessClass()), 'stdClass'),
+
+            array(true, 'interface', new ArrayAccessClass(), 'stdClass'),
+            array(false, 'interface', new SubClass(), 'stdClass'),
             );
         }
 
