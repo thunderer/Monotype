@@ -168,11 +168,13 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
     public function testMultipleClassesWithSingleMonotypeObject()
         {
         $mt = new Monotype(new SingleStrategy(), array(
-            new ClassType(Fixture::class),
+            new ClassType('Thunder\\Monotype\\Tests\\Dummy\\Fixture'),
             new CallbackType(function($value) {
-                return is_object($value) && get_class($value) === SubClass::class;
+                $class = 'Thunder\\Monotype\\Tests\\Dummy\\SubClass';
+
+                return is_object($value) && get_class($value) === $class;
                 }),
-            new AliasType('class_array', new ClassType(ArrayAccessClass::class)),
+            new AliasType('class_array', new ClassType('Thunder\\Monotype\\Tests\\Dummy\\ArrayAccessClass')),
             ));
 
         $this->assertTrue($mt->isValid(new Fixture('x'), array('class')));

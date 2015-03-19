@@ -87,10 +87,12 @@ There are several types and strategies built right into the codebase of this lib
   * **array**: checks `is_array()`,
   * **boolean**: checks `is_bool()`,
   * **class**: compares `get_class()` result,
+  * **interface**: checks whether `class_implements()` results contain given interface,
   * **callable**: checks `is_callable()`,
   * **object**: checks `is_object()`,
   * **null**: checks `is_null()`,
   * **scalar**: checks `is_scalar()`,
+  * **callback**: expects callable argument to determine validation result,
   
 * Types (loose)
   
@@ -103,6 +105,7 @@ There are several types and strategies built right into the codebase of this lib
   
 * Special Types:
 
+  * class **AliasType**: requires instance of other type and alias in constructor, allows to register same type multiple times with custom aliases,
   * class **ArrayOfType**: requires instance of other type in constructor, its alias is inherited and postfixed with `[]`, checks for array of values matching given type.
 
 ## License
