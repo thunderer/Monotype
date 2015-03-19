@@ -1,0 +1,7 @@
+TODO:
+
+* conditional method bypass (condition is optional),
+* generic event handling in builder (rather than specific adder methods),
+* refactor Decorator class to remove private methods blocking colliding method names,
+* introduce TrueType and FalseType for loose boolean checks,
+* implement events for other calls, __callStatic(), __invoke() and so on.

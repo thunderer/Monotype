@@ -33,6 +33,11 @@ final class DecoratorBuilder
             $this->methodSignature, $this->monotype ? clone $this->monotype : null);
         }
 
+    public function addEvent($type, $name, callable $handler)
+        {
+        return $this;
+        }
+
     public function beforeMethodCall($method, callable $handler)
         {
         return $this->addHandler($this->beforeMethodCall, $method, $handler);
