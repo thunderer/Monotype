@@ -2,7 +2,13 @@
 
 ## Version 0.*
 
-* v0.2.0 ()
+* v0.3.0 (TBD)
+
+  * introduced Decorator for easy callbacks on before and after method call and property manipulation events
+  * introduced InterfaceType for checking if given class or object implements configured interface
+  * introduced AliasType for registering custom types with overridden aliases, for example for multiple class checks
+
+* v0.2.0 (24.11.2014)
 
   * rewritten library
   * all types now live in separate classes and can be registered separately

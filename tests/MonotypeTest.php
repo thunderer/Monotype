@@ -6,12 +6,15 @@ use Thunder\Monotype\Strategy\AllStrategy;
 use Thunder\Monotype\Strategy\AtLeastStrategy;
 use Thunder\Monotype\Strategy\SingleStrategy;
 use Thunder\Monotype\StrategyInterface;
+use Thunder\Monotype\Tests\Dummy\Fixture;
+use Thunder\Monotype\Type\AliasType;
 use Thunder\Monotype\Type\ArrayOfType;
 use Thunder\Monotype\Type\ArrayType;
 use Thunder\Monotype\Type\ArrayValueType;
 use Thunder\Monotype\Type\BooleanType;
 use Thunder\Monotype\Type\BooleanValueType;
 use Thunder\Monotype\Type\CallableType;
+use Thunder\Monotype\Type\CallbackType;
 use Thunder\Monotype\Type\ClassType;
 use Thunder\Monotype\Type\ClassValueType;
 use Thunder\Monotype\Type\FloatType;
@@ -160,6 +163,21 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
             array(true, 'interface', new ArrayAccessClass(), 'stdClass'),
             array(false, 'interface', new SubClass(), 'stdClass'),
             );
+        }
+
+    public function testMultipleClassesWithSingleMonotypeObject()
+        {
+        $mt = new Monotype(new SingleStrategy(), array(
+            new ClassType(Fixture::class),
+            new CallbackType(function($value) {
+                return is_object($value) && get_class($value) === SubClass::class;
+                }),
+            new AliasType('class_array', new ClassType(ArrayAccessClass::class)),
+            ));
+
+        $this->assertTrue($mt->isValid(new Fixture('x'), array('class')));
+        $this->assertTrue($mt->isValid(new SubClass(), array('callback')));
+        $this->assertTrue($mt->isValid(new ArrayAccessClass(), array('class_array')));
         }
 
     public function testMonotypeNoTestsException()
