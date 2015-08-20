@@ -19,9 +19,4 @@ final class ClassType implements TypeInterface
         {
         return get_class($value) === $this->class;
         }
-
-    public function getAlias()
-        {
-        return 'class';
-        }
     }

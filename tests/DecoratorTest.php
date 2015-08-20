@@ -6,6 +6,7 @@ use Thunder\Monotype\Monotype;
 use Thunder\Monotype\Strategy\AllStrategy;
 use Thunder\Monotype\Tests\Dummy\Fixture;
 use Thunder\Monotype\Type\StringType;
+use Thunder\Monotype\TypeContainer;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
@@ -15,7 +16,9 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
     public function testDecorator()
         {
         $statuses = array();
-        $monotype = new Monotype(new AllStrategy(), array(new StringType()));
+        $types = (new TypeContainer())
+            ->add('string', new StringType());
+        $monotype = new Monotype(new AllStrategy(), $types);
         $builder = DecoratorBuilder::create()
             ->beforeMethodCall('setVar', function() use(&$statuses) { $statuses[] = 'BMC'; })
             ->afterMethodCall('getVar', function() use(&$statuses) { $statuses[] = 'AMC'; })
@@ -47,7 +50,9 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
     public function testDecoratorPropertyMark()
         {
         $statuses = 0;
-        $monotype = new Monotype(new AllStrategy(), array(new StringType()));
+        $types = (new TypeContainer())
+            ->add('string', new StringType());
+        $monotype = new Monotype(new AllStrategy(), $types);
         $callback = function() use(&$statuses) { $statuses++; };
         $builder = DecoratorBuilder::create()
             ->markProperty('foo', 'string', $monotype,  $callback);
@@ -94,7 +99,9 @@ final class DecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function testMethodWithSignatureArgumentTypeMismatchException()
         {
-        $monotype = new Monotype(new AllStrategy(), array(new StringType()));
+        $types = (new TypeContainer())
+            ->add('string', new StringType());
+        $monotype = new Monotype(new AllStrategy(), $types);
         $obj = DecoratorBuilder::create()
             ->methodSignature('setFoo', array(array('string')), 'void', $monotype)
             ->getDecorator(new Fixture('x'));

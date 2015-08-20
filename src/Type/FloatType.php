@@ -12,9 +12,4 @@ final class FloatType implements TypeInterface
         {
         return is_float($value) || is_double($value);
         }
-
-    public function getAlias()
-        {
-        return 'float';
-        }
     }

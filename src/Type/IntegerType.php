@@ -12,9 +12,4 @@ final class IntegerType implements TypeInterface
         {
         return is_int($value);
         }
-
-    public function getAlias()
-        {
-        return 'integer';
-        }
     }

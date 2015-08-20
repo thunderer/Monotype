@@ -12,9 +12,4 @@ final class ScalarType implements TypeInterface
         {
         return is_scalar($value);
         }
-
-    public function getAlias()
-        {
-        return 'scalar';
-        }
     }

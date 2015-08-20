@@ -6,30 +6,17 @@ namespace Thunder\Monotype;
  */
 final class Monotype
     {
-    /** @var StrategyInterface */
     private $strategy;
-
-    /** @var TypeInterface[] */
-    private $types = array();
+    private $types;
 
     /**
      * @param StrategyInterface $strategy
-     * @param TypeInterface[] $types
+     * @param TypeContainerInterface $types
      */
-    public function __construct(StrategyInterface $strategy, array $types)
+    public function __construct(StrategyInterface $strategy, TypeContainerInterface $types)
         {
-        if(empty($types))
-            {
-            $msg = 'I am really sorry, but you did not provide any tests...';
-            throw new \InvalidArgumentException($msg);
-            }
-
         $this->strategy = $strategy;
-
-        foreach($types as $test)
-            {
-            $this->addType($test);
-            }
+        $this->types = $types;
         }
 
     /**
@@ -44,16 +31,5 @@ final class Monotype
     public function isValid($value, array $tests)
         {
         return $this->strategy->isValid($this->types, $value, $tests);
-        }
-
-    private function addType(TypeInterface $test)
-        {
-        if(array_key_exists($test->getAlias(), $this->types))
-            {
-            $msg = 'Duplicate test alias %s!';
-            throw new \RuntimeException(sprintf($msg, $test->getAlias()));
-            }
-
-        $this->types[$test->getAlias()] = $test;
         }
     }

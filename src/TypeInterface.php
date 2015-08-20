@@ -14,11 +14,4 @@ interface TypeInterface
      * @return bool
      */
     public function isValid($value);
-
-    /**
-     * Returns alias of current test to be used in other places.
-     *
-     * @return string
-     */
-    public function getAlias();
     }

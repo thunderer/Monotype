@@ -12,9 +12,4 @@ final class StringType implements TypeInterface
         {
         return is_string($value);
         }
-
-    public function getAlias()
-        {
-        return 'string';
-        }
     }

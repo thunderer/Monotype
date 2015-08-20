@@ -2,6 +2,7 @@
 namespace Thunder\Monotype\Strategy;
 
 use Thunder\Monotype\StrategyInterface;
+use Thunder\Monotype\TypeContainerInterface;
 
 class AtLeastStrategy implements StrategyInterface
     {
@@ -9,7 +10,7 @@ class AtLeastStrategy implements StrategyInterface
 
     public function __construct($threshold)
         {
-        if(!is_int($threshold))
+        if(!is_int($threshold) || intval($threshold) <= 0)
             {
             throw new \InvalidArgumentException('Threshold must be a valid integer!');
             }
@@ -17,18 +18,18 @@ class AtLeastStrategy implements StrategyInterface
         $this->threshold = $threshold;
         }
 
-    public function isValid(array $types, $value, array $tests)
+    public function isValid(TypeContainerInterface $types, $value, array $tests)
         {
         $matches = 0;
 
         foreach($tests as $alias)
             {
-            if(!array_key_exists($alias, $types))
+            if(!$types->get($alias))
                 {
                 $msg = 'Test alias %s does not exist!';
                 throw new \RuntimeException(sprintf($msg, $alias));
                 }
-            if($types[$alias]->isValid($value))
+            if($types->get($alias)->isValid($value))
                 {
                 $matches++;
                 }

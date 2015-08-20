@@ -12,9 +12,4 @@ final class NullType implements TypeInterface
         {
         return is_null($value);
         }
-
-    public function getAlias()
-        {
-        return 'null';
-        }
     }

@@ -24,9 +24,4 @@ final class ArrayOfType implements TypeInterface
             return !$state ?: $type->isValid($value);
             }, true);
         }
-
-    public function getAlias()
-        {
-        return $this->test->getAlias().'[]';
-        }
     }

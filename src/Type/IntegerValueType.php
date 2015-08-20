@@ -16,9 +16,4 @@ final class IntegerValueType implements TypeInterface
             ? ctype_digit((string)$value)
             : false;
         }
-
-    public function getAlias()
-        {
-        return '@integer';
-        }
     }

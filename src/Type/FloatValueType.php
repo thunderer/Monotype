@@ -14,9 +14,4 @@ final class FloatValueType implements TypeInterface
 
         return $floatTest->isValid($value) || (is_numeric((string)$value) && preg_match('/^[0-9]+\\.[0-9]+$/', (string)$value));
         }
-
-    public function getAlias()
-        {
-        return '@float';
-        }
     }

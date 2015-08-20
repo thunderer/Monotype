@@ -21,9 +21,4 @@ final class InterfaceType implements TypeInterface
 
         return in_array($this->interface, class_implements($className, true));
         }
-
-    public function getAlias()
-        {
-        return 'interface';
-        }
     }

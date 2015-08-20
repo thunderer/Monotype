@@ -17,9 +17,4 @@ final class StringValueType implements TypeInterface
             ? method_exists($value, '__toString')
             : $stringTest->isValid((string)$value);
         }
-
-    public function getAlias()
-        {
-        return '@string';
-        }
     }

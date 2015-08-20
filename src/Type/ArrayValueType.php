@@ -14,9 +14,4 @@ final class ArrayValueType implements TypeInterface
 
         return is_array($value) || ($objectTest->isValid($value) && $value instanceof \ArrayAccess);
         }
-
-    public function getAlias()
-        {
-        return '@array';
-        }
     }

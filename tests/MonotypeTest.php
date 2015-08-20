@@ -29,6 +29,7 @@ use Thunder\Monotype\Type\StringType;
 use Thunder\Monotype\Type\StringValueType;
 use Thunder\Monotype\Tests\Dummy\ArrayAccessClass;
 use Thunder\Monotype\Tests\Dummy\SubClass;
+use Thunder\Monotype\TypeContainer;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
@@ -40,26 +41,26 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
      */
     public function testSingleValues($expected, $method, $data)
         {
-        $monotype = new Monotype(new AllStrategy(), array(
-            new IntegerType(),
-            new IntegerValueType(),
-            new FloatType(),
-            new FloatValueType(),
-            new StringType(),
-            new StringValueType(),
-            new ArrayType(),
-            new ArrayValueType(),
-            new BooleanType(),
-            new BooleanValueType(),
-            new CallableType(),
-            new ScalarType(),
-            new ObjectType(),
-            new NullType(),
-            new ArrayOfType(new IntegerType()),
-            new ArrayOfType(new IntegerValueType()),
-            new ArrayOfType(new FloatType()),
-            new ArrayOfType(new FloatValueType()),
-            ));
+        $types = (new TypeContainer())
+            ->add('integer', new IntegerType())
+            ->add('@integer', new IntegerValueType())
+            ->add('float', new FloatType())
+            ->add('@float', new FloatValueType())
+            ->add('string', new StringType())
+            ->add('@string', new StringValueType())
+            ->add('array', new ArrayType())
+            ->add('@array', new ArrayValueType())
+            ->add('boolean', new BooleanType())
+            ->add('@boolean', new BooleanValueType())
+            ->add('callable', new CallableType())
+            ->add('scalar', new ScalarType())
+            ->add('object', new ObjectType())
+            ->add('null', new NullType())
+            ->add('integer[]', new ArrayOfType(new IntegerType()))
+            ->add('@integer[]', new ArrayOfType(new IntegerValueType()))
+            ->add('float[]', new ArrayOfType(new FloatType()))
+            ->add('@float[]', new ArrayOfType(new FloatValueType()));
+        $monotype = new Monotype(new AllStrategy(), $types);
 
         $this->assertEquals($expected, $monotype->isValid($data, array($method)));
         }
@@ -134,13 +135,13 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
      */
     public function testClasses($expected, $method, $data, $class)
         {
-        $monotype = new Monotype(new AllStrategy(), array(
-            new ClassType($class),
-            new ClassValueType($class),
-            new ArrayOfType(new ClassType('stdClass')),
-            new ArrayOfType(new ClassValueType('stdClass')),
-            new InterfaceType('ArrayAccess'),
-            ));
+        $types = (new TypeContainer())
+            ->add('class', new ClassType($class))
+            ->add('@class', new ClassValueType($class))
+            ->add('class[]', new ArrayOfType(new ClassType('stdClass')))
+            ->add('@class[]', new ArrayOfType(new ClassValueType('stdClass')))
+            ->add('interface', new InterfaceType('ArrayAccess'));
+        $monotype = new Monotype(new AllStrategy(), $types);
 
         $this->assertEquals($expected, $monotype->isValid($data, array($method)));
         }
@@ -167,25 +168,19 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
 
     public function testMultipleClassesWithSingleMonotypeObject()
         {
-        $mt = new Monotype(new SingleStrategy(), array(
-            new ClassType('Thunder\\Monotype\\Tests\\Dummy\\Fixture'),
-            new CallbackType(function($value) {
+        $types = (new TypeContainer())
+            ->add('class', new ClassType('Thunder\\Monotype\\Tests\\Dummy\\Fixture'))
+            ->add('callback', new CallbackType(function($value) {
                 $class = 'Thunder\\Monotype\\Tests\\Dummy\\SubClass';
 
                 return is_object($value) && get_class($value) === $class;
-                }),
-            new AliasType('class_array', new ClassType('Thunder\\Monotype\\Tests\\Dummy\\ArrayAccessClass')),
-            ));
+                }))
+            ->add('class_array', new ClassType('Thunder\\Monotype\\Tests\\Dummy\\ArrayAccessClass'));
+        $mt = new Monotype(new SingleStrategy(), $types);
 
         $this->assertTrue($mt->isValid(new Fixture('x'), array('class')));
         $this->assertTrue($mt->isValid(new SubClass(), array('callback')));
         $this->assertTrue($mt->isValid(new ArrayAccessClass(), array('class_array')));
-        }
-
-    public function testMonotypeNoTestsException()
-        {
-        $this->setExpectedException('InvalidArgumentException');
-        new Monotype(new AllStrategy(), array());
         }
 
     /**
@@ -193,10 +188,10 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
      */
     public function testMonotypeNonExistentTestException(StrategyInterface $strategy)
         {
+        $types = (new TypeContainer())
+            ->add('integer', new IntegerType());
         $this->setExpectedException('RuntimeException');
-        $monotype = new Monotype($strategy, array(
-            new IntegerType(),
-            ));
+        $monotype = new Monotype($strategy, $types);
         $monotype->isValid(12, array('@integer'));
         }
 
@@ -211,32 +206,31 @@ final class MonotypeTest extends \PHPUnit_Framework_TestCase
 
     public function testMonotypeDuplicateTestAliasException()
         {
+        $types = new TypeContainer();
+        $types->add('integer', new IntegerType());
         $this->setExpectedException('RuntimeException');
-        new Monotype(new AllStrategy(), array(
-            new IntegerType(),
-            new IntegerType(),
-            ));
+        $types->add('integer', new IntegerType());
         }
 
     public function testOtherStrategies()
         {
-        $monotypeSingle = new Monotype(new SingleStrategy(), array(
-            new IntegerType(),
-            new StringType(),
-            ));
+        $types = (new TypeContainer())
+            ->add('integer', new IntegerType())
+            ->add('string', new StringType());
+        $monotypeSingle = new Monotype(new SingleStrategy(), $types);
         $this->assertTrue($monotypeSingle->isValid(12, array('integer', 'string')));
         $this->assertTrue($monotypeSingle->isValid('x', array('integer', 'string')));
         $this->assertFalse($monotypeSingle->isValid(new \stdClass(), array('integer', 'string')));
 
-        $monotypeSingle = new Monotype(new AtLeastStrategy(2), array(
-            new IntegerType(),
-            new IntegerValueType(),
-            new StringType(),
-            ));
-        $this->assertFalse($monotypeSingle->isValid(12, array('integer', 'string')));
-        $this->assertTrue($monotypeSingle->isValid('12', array('@integer', 'string')));
-        $this->assertFalse($monotypeSingle->isValid('x', array('integer', 'string')));
-        $this->assertFalse($monotypeSingle->isValid(new \stdClass(), array('integer', 'string')));
+        $types = (new TypeContainer())
+            ->add('integer', new IntegerType())
+            ->add('@integer', new IntegerValueType())
+            ->add('string', new StringType());
+        $monotypeAtLeast = new Monotype(new AtLeastStrategy(2), $types);
+        $this->assertFalse($monotypeAtLeast->isValid(12, array('integer', 'string')));
+        $this->assertTrue($monotypeAtLeast->isValid('12', array('@integer', 'string')));
+        $this->assertFalse($monotypeAtLeast->isValid('x', array('integer', 'string')));
+        $this->assertFalse($monotypeAtLeast->isValid(new \stdClass(), array('integer', 'string')));
         }
 
     public function testAtLeastStrategyInvalidThresholdException()

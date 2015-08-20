@@ -19,9 +19,4 @@ final class CallbackType implements TypeInterface
         {
         return call_user_func_array($this->callback, array($value));
         }
-
-    public function getAlias()
-        {
-        return 'callback';
-        }
     }

@@ -12,9 +12,4 @@ final class BooleanType implements TypeInterface
         {
         return is_bool($value);
         }
-
-    public function getAlias()
-        {
-        return 'boolean';
-        }
     }

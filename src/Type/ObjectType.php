@@ -12,9 +12,4 @@ final class ObjectType implements TypeInterface
         {
         return is_object($value);
         }
-
-    public function getAlias()
-        {
-        return 'object';
-        }
     }

@@ -12,9 +12,4 @@ final class CallableType implements TypeInterface
         {
         return is_callable($value);
         }
-
-    public function getAlias()
-        {
-        return 'callable';
-        }
     }

@@ -12,9 +12,4 @@ final class ArrayType implements TypeInterface
         {
         return is_array($value);
         }
-
-    public function getAlias()
-        {
-        return 'array';
-        }
     }

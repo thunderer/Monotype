@@ -105,8 +105,7 @@ There are several types and strategies built right into the codebase of this lib
   
 * Special Types:
 
-  * class **AliasType**: requires instance of other type and alias in constructor, allows to register same type multiple times with custom aliases,
-  * class **ArrayOfType**: requires instance of other type in constructor, its alias is inherited and postfixed with `[]`, checks for array of values matching given type.
+  * class **ArrayOfType**: requires instance of other type in constructor, checks for array of values matching given type.
 
 ## License
 

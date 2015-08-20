@@ -19,9 +19,4 @@ final class ClassValueType implements TypeInterface
         {
         return $value instanceof $this->class;
         }
-
-    public function getAlias()
-        {
-        return '@class';
-        }
     }
