@@ -2,7 +2,7 @@
 namespace Thunder\Monotype\Strategy;
 
 use Thunder\Monotype\StrategyInterface;
-use Thunder\Monotype\TypeContainerInterface;
+use Thunder\Monotype\TypeContainer\TypeContainerInterface;
 
 class SingleStrategy implements StrategyInterface
     {

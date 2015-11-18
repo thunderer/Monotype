@@ -6,7 +6,7 @@ use Thunder\Monotype\Monotype;
 use Thunder\Monotype\Strategy\AllStrategy;
 use Thunder\Monotype\Tests\Dummy\Fixture;
 use Thunder\Monotype\Type\StringType;
-use Thunder\Monotype\TypeContainer;
+use Thunder\Monotype\TypeContainer\TypeContainer;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>

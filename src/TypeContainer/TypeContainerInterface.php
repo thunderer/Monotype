@@ -1,5 +1,7 @@
 <?php
-namespace Thunder\Monotype;
+namespace Thunder\Monotype\TypeContainer;
+
+use Thunder\Monotype\TypeInterface;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>

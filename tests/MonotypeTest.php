@@ -7,7 +7,6 @@ use Thunder\Monotype\Strategy\AtLeastStrategy;
 use Thunder\Monotype\Strategy\SingleStrategy;
 use Thunder\Monotype\StrategyInterface;
 use Thunder\Monotype\Tests\Dummy\Fixture;
-use Thunder\Monotype\Type\AliasType;
 use Thunder\Monotype\Type\ArrayOfType;
 use Thunder\Monotype\Type\ArrayType;
 use Thunder\Monotype\Type\ArrayValueType;
@@ -29,7 +28,7 @@ use Thunder\Monotype\Type\StringType;
 use Thunder\Monotype\Type\StringValueType;
 use Thunder\Monotype\Tests\Dummy\ArrayAccessClass;
 use Thunder\Monotype\Tests\Dummy\SubClass;
-use Thunder\Monotype\TypeContainer;
+use Thunder\Monotype\TypeContainer\TypeContainer;
 
 /**
  * @author Tomasz Kowalczyk <tomasz@kowalczyk.cc>
